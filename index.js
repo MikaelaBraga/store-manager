@@ -7,6 +7,7 @@ const productController = require('./controllers/productController');
 const middleware = require('./middlewares/errors/index');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -21,6 +22,6 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });

@@ -14,7 +14,22 @@ const getByName = async (name) => {
   return products[0];
 };
 
+const getAll = async () => {
+ const [products] = await connect.query('SELECT * FROM products');
+
+ return products;
+};
+
+const getById = async (id) => {
+  const [products] = await connect.query('SELECT * FROM products WHERE id = ?', [id]);
+
+  if (!products.length) return null;
+  return products[0];
+};
+
 module.exports = {
   add,
   getByName,
+  getAll,
+  getById,
 };
