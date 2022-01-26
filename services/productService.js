@@ -1,4 +1,4 @@
-const { add, getByName, getAll, getById } = require('../models/productModel');
+const { add, getByName, getAll, getById, update } = require('../models/productModel');
 const errorConstructor = require('../utils/errorConstructor');
 
 const registerProduct = (name, quantity) => add(name, quantity);
@@ -29,9 +29,18 @@ const getProductById = async (id) => {
   return product;
 };
 
+const updateProductById = async ({ id, name, quantity }) => {
+  await getProductById(id);
+
+  const updateProduct = await update(id, name, quantity);
+
+  return updateProduct;
+};
+
 module.exports = {
   registerProduct,
   getProductByName,
   getAllProducts,
   getProductById,
+  updateProductById,
 };

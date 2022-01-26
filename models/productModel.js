@@ -27,9 +27,19 @@ const getById = async (id) => {
   return products[0];
 };
 
+const update = async (id, name, quantity) => {
+  await connect.query('UPDATE products SET name = ?, quantity = ? WHERE id = ?',
+  [name, quantity, id]);
+
+  const parseId = parseInt(id, 10);
+
+  return { id: parseId, name, quantity };
+};
+
 module.exports = {
   add,
   getByName,
   getAll,
   getById,
+  update,
 };
