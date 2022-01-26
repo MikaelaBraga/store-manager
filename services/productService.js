@@ -10,7 +10,7 @@ const getProductByName = async (name) => {
     throw errorConstructor('conflicts', 'Product already exists');
   }
 
-  return product;
+  return false;
 };
 
 module.exports = {
