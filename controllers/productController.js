@@ -6,6 +6,7 @@ const {
   getAllProducts,
   getProductById,
   updateProductById,
+  removeProductById,
  } = require('../services/productService');
 const { validateProductSchema } = require('../schemas/productSchema');
 
@@ -40,6 +41,12 @@ product.put('/:id', rescue(async (req, res) => {
   const updateProduct = await updateProductById({ id, name, quantity });
 
   return res.status(200).json(updateProduct);
+}));
+
+product.delete('/:id', rescue(async (req, res) => {
+  const deleteProduct = await removeProductById(req.params.id);
+
+  return res.status(200).json(deleteProduct);
 }));
 
 module.exports = product;

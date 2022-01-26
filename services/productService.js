@@ -1,4 +1,4 @@
-const { add, getByName, getAll, getById, update } = require('../models/productModel');
+const { add, getByName, getAll, getById, update, remove } = require('../models/productModel');
 const errorConstructor = require('../utils/errorConstructor');
 
 const registerProduct = (name, quantity) => add(name, quantity);
@@ -37,10 +37,21 @@ const updateProductById = async ({ id, name, quantity }) => {
   return updateProduct;
 };
 
+const removeProductById = async (id) => {
+  const product = await remove(id);
+
+  if (product === null) {
+    throw errorConstructor('notFound', 'Product not found');
+  }
+
+  return product;
+};
+
 module.exports = {
   registerProduct,
   getProductByName,
   getAllProducts,
   getProductById,
   updateProductById,
+  removeProductById,
 };

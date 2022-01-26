@@ -36,10 +36,19 @@ const update = async (id, name, quantity) => {
   return { id: parseId, name, quantity };
 };
 
+const remove = async (id) => {
+  const product = await getById(id);
+  if (!product) return null;
+  await connect.query('DELETE FROM products WHERE id = ?', [id]);
+
+  return product;
+};
+
 module.exports = {
   add,
   getByName,
   getAll,
   getById,
   update,
+  remove,
 };

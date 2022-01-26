@@ -4,7 +4,6 @@ module.exports = (err, req, res, next) => {
     notFound: 404,
   };
   const status = errorMap[err.code];
-  console.log(err);
 
   if (!status) {
     return next(err);
