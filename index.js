@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const productController = require('./controllers/productController');
+const salesController = require('./controllers/salesController');
 const middleware = require('./middlewares/errors/index');
 
 const app = express();
@@ -12,6 +13,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.use('/products', productController);
+app.use('/sales', salesController);
 
 app.use(middleware.joiError);
 app.use(middleware.domainError);

@@ -1,7 +1,7 @@
 const { add, getByName, getAll, getById, update, remove } = require('../models/productModel');
 const errorConstructor = require('../utils/errorConstructor');
 
-const registerProduct = (name, quantity) => add(name, quantity);
+const registerProduct = async (name, quantity) => add(name, quantity);
 
 const getProductByName = async (name) => {
   const product = await getByName(name);
