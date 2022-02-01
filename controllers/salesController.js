@@ -1,6 +1,5 @@
 const rescue = require('express-rescue');
 const sales = require('express').Router();
-// const { validatedSaleSchema } = require('../schemas/saleSchema');
 const {
   validatedFieldProductId,
   validateFieldQuantity } = require('../middlewares/validatedSaleMiddleware');
@@ -13,9 +12,8 @@ validatedFieldProductId,
 validateFieldQuantity,
 rescue(async (req, res) => {
   const sale = await registerSale(req.body);
-  // validatedSaleSchema(req.body);
 
-  return res.status(200).json(sale);
+  return res.status(201).json(sale);
 }));
 
 module.exports = sales;
