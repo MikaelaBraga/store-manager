@@ -18,7 +18,7 @@ const validateFieldQuantity = (req, res, next) => {
   const sales = req.body;
 
   const existsFieldQuantity = sales.every((sale) => sale.quantity);
-  // console.log(existsFieldQuantity);
+  console.log(existsFieldQuantity);
   if (!existsFieldQuantity) return res.status(400).json(errorMessages.quantityRequired);
 
   const quantity = sales.some((sale) => typeof sale.quantity === 'string' || sale.quantity <= 0);

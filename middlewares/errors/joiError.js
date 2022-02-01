@@ -1,6 +1,7 @@
 const joi = require('joi');
 
 module.exports = (err, req, res, next) => {
+  console.log(err);
   if (!joi.isError(err)) {
     return next(err);
   }
