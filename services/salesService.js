@@ -1,4 +1,4 @@
-const { add, getAll, getById } = require('../models/salesModel');
+const { add, getAll, getById, update, remove } = require('../models/salesModel');
 const errorConstructor = require('../utils/errorConstructor');
 const { getProductById } = require('./productService');
 
@@ -29,4 +29,22 @@ const getSaleById = async (id) => {
   return sale;
 };
 
-module.exports = { registerSale, getAllSales, getSaleById };
+const updateSale = async (id, sale) => {
+  await getSaleById(id);
+  await Promise.all(
+    sale.map(async (p) => {
+      await getProductById(p.product_id);
+    }),
+  );
+  const updatedSale = await update(id, sale);
+  return updatedSale;
+};
+
+const removeSale = async (id) => {
+  const row = await getSaleById(id);
+  await remove(id);
+
+  return row;
+};
+
+module.exports = { registerSale, getAllSales, getSaleById, updateSale, removeSale };

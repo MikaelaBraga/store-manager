@@ -4,7 +4,7 @@ const {
   validatedFieldProductId,
   validateFieldQuantity } = require('../middlewares/validatedSaleMiddleware');
 const {
-  registerSale, getAllSales, getSaleById,
+  registerSale, getAllSales, getSaleById, updateSale, removeSale,
 } = require('../services/salesService');
 
 sales.post('/',
@@ -26,6 +26,18 @@ sales.get('/:id', rescue(async (req, res) => {
   const sale = await getSaleById(req.params.id);
 
   return res.status(200).json(sale);
+}));
+
+sales.put('/:id', rescue(async (req, res) => {
+  const updatedSale = await updateSale(req.params.id, req.body);
+
+  return res.status(200).json(updatedSale);
+}));
+
+sales.delete('/:id', rescue(async (req, res) => {
+  const remove = await removeSale(req.params.id);
+
+  return res.status(200).json(remove);
 }));
 
 module.exports = sales;

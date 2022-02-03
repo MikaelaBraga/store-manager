@@ -33,8 +33,32 @@ const getById = async (id) => {
   return sales;
 };
 
+const update = async (id, sale) => {
+  // const [{ product_id: productId, quantity }] = sale;
+
+  const [sales] = await connect.query(
+    'UPDATE sales_products SET product_id = ?, quantity = ? WHERE sale_id = ?',
+    [sale[0].product_id, sale[0].quantity, id],
+  );
+
+  if (!sales.changedRows) return null;
+
+  return { saleId: parseInt(id, 10), itemUpdated: sale };
+};
+
+const remove = async (id) => {
+  const sale = await getById(id);
+  if (!sale) return null;
+  await connect.query('DELETE FROM sales_products WHERE sale_id = ?', [id]);
+  await connect.query('DELETE FROM sales WHERE id = ?', [id]);
+
+  return sale;
+};
+
 module.exports = {
   add,
   getAll,
   getById,
+  update,
+  remove,
 };
