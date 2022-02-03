@@ -14,6 +14,27 @@ const add = async (sales) => {
   return { id: sale.insertId, itemsSold: sales };
 };
 
+const getAll = async () => {
+  const [sales] = await connect.query(
+    `SELECT sp.sale_id AS saleId, s.date, sp.product_id, sp.quantity
+    FROM sales_products AS sp
+    INNER JOIN sales AS s ON sp.sale_id = s.id;`,
+  );
+  return sales;
+};
+
+const getById = async (id) => {
+  const [sales] = await connect.query(
+    `SELECT s.date, sp.product_id, sp.quantity FROM sales_products AS sp
+    INNER JOIN sales AS s ON sp.sale_id = s.id WHERE s.id = ?;`, [id],
+  );
+
+  if (!sales.length) return null;
+  return sales;
+};
+
 module.exports = {
   add,
+  getAll,
+  getById,
 };

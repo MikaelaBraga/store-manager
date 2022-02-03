@@ -1,4 +1,5 @@
-const { add } = require('../models/salesModel');
+const { add, getAll, getById } = require('../models/salesModel');
+const errorConstructor = require('../utils/errorConstructor');
 const { getProductById } = require('./productService');
 
 const registerSale = async (sales) => {
@@ -12,4 +13,20 @@ const registerSale = async (sales) => {
   return createSale;
 };
 
-module.exports = { registerSale };
+const getAllSales = async () => {
+  const allSales = await getAll();
+
+  return allSales;
+};
+
+const getSaleById = async (id) => {
+  const sale = await getById(id);
+
+  if (sale === null) {
+    throw errorConstructor('notFound', 'Sale not found');
+  }
+
+  return sale;
+};
+
+module.exports = { registerSale, getAllSales, getSaleById };
