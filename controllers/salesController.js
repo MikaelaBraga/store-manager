@@ -28,7 +28,10 @@ sales.get('/:id', rescue(async (req, res) => {
   return res.status(200).json(sale);
 }));
 
-sales.put('/:id', rescue(async (req, res) => {
+sales.put('/:id',
+validatedFieldProductId,
+validateFieldQuantity,
+rescue(async (req, res) => {
   const updatedSale = await updateSale(req.params.id, req.body);
 
   return res.status(200).json(updatedSale);
