@@ -34,8 +34,6 @@ const getById = async (id) => {
 };
 
 const update = async (id, sale) => {
-  // const [{ product_id: productId, quantity }] = sale;
-
   const [sales] = await connect.query(
     'UPDATE sales_products SET product_id = ?, quantity = ? WHERE sale_id = ?',
     [sale[0].product_id, sale[0].quantity, id],
@@ -51,6 +49,11 @@ const remove = async (id) => {
   if (!sale) return null;
   await connect.query('DELETE FROM sales_products WHERE sale_id = ?', [id]);
   await connect.query('DELETE FROM sales WHERE id = ?', [id]);
+
+  await Promise.all(sale.map(async (s) => {
+    await connect.execute('UPDATE products SET quantity = quantity + ? WHERE id = ?;',
+  [s.quantity, s.product_id]);
+  }));
 
   return sale;
 };
