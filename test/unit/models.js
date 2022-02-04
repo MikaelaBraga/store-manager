@@ -137,6 +137,36 @@ describe('Teste da camada Model Products', () => {
 
         expect(product).to.include.all.keys('id', 'name', 'quantity');
       });
+
+      describe('Atualiza um produto no BD', () => {
+        describe('Em caso de sucesso', () => {
+          const payloadProduct = {
+            id: 1,
+            name: 'Batatinha',
+            quantity: 10
+          }
+
+          before(async () => {
+            sinon.stub(connection, 'execute').resolves([{ changedRows: 1 }]);
+          });
+
+          after(async () => {
+            connection.execute.restore();
+          });
+
+          it('Retorna um objeto com a propriedade "changedRows"', async () => {
+            const product = await productsModel.update(payloadProduct);
+
+            expect(product.changedRows).to.be.equal(1);
+
+            it('Retorna um objeto com novo valor atualizado', async () => {
+              const product = await productsModel.update(payloadProduct);
+
+              expect(product).to.include.all.keys('id', 'name', 'quantity');
+            });
+          });
+        });
+      });
     });
   });
 });
