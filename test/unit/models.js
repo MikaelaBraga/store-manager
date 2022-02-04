@@ -52,7 +52,7 @@ describe('Teste da camada Model Products', () => {
         const listProducts = await productsModel.getAll();
 
         expect(listProducts).to.be.an('array');
-        expect(listProducts).to.be.length(0);
+        expect(listProducts).to.be.empty;
       });
     });
 
@@ -80,25 +80,64 @@ describe('Teste da camada Model Products', () => {
         const listProducts = await productsModel.getAll();
 
         expect(listProducts).to.be.an('array');
-        expect(listProducts).not.to.be.length(0);
+        expect([listProducts]).to.be.an('object');
+      });
+
+      it('O objetos dod produtos possui as propriedades "id", "name" e "quantity"', async () => {
+        const [itemProduct] = await productsModel.getAll();
+
+        expect(itemProduct).to.include.all.keys('id', 'name', 'quantity');
       });
     });
   });
 
   describe('Busca um produto pelo seu "id" no BD', () => {
-
     describe('Quando o produto NÃO é encontrado', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves([[]]);
+      });
 
-      it('Retorna uma mensagem de "Product not found"', async () => {});
+      after(async () => {
+        connection.execute.restore();
+      });
+
+      it('Retorna um array vazio', async () => {
+        const response = await productsModel.getById(1);
+
+        expect(response).to.be.an('array');
+        expect(response).to.be.empty;
+      });
 
     });
 
     describe('Quando o produto É encontrado', () => {
+      const product = {
+        id: 1,
+        name: 'Batata',
+        quantity: 10
+      }
 
-      it('Retorna um array com UM objeto', async () => {});
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves([product]);
+      });
 
+      after(async () => {
+        connection.execute.restore();
+      });
+
+      it('Retorna um array com UM objeto', async () => {
+        const response = await productsModel.getById(1);
+
+        expect(response).to.be.an('array');
+        expect([response]).to.be.an('object');
+      });
+
+      it('O objeto do produto possui as propriedades "id", "name" e "quantity"', async () => {
+        const [product] = await productsModel.getById(1);
+
+        expect(product).to.include.all.keys('id', 'name', 'quantity');
+      });
     });
-
   });
 });
 
