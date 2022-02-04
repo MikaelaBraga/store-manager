@@ -17,11 +17,11 @@ describe('Teste da camada Model Products', () => {
       before(async () => {
         const execute = [{ insertId: 1 }];
 
-        sinon.stub(connection, 'execute').resolves(execute);
+        sinon.stub(connection, 'query').resolves(execute);
       });
 
       after(async () => {
-        connection.execute.restore();
+        connection.query.restore();
       });
 
       it('Retorna um objeto', async () => {
@@ -41,18 +41,18 @@ describe('Teste da camada Model Products', () => {
   describe('Lista os produtos cadastrados no BD', () => {
     describe('Quando NÃO HÁ produtos cadastrado no BD', () => {
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([[]]);
+        sinon.stub(connection, 'query').resolves([[]]);
       });
 
       after(async () => {
-        connection.execute.restore();
+        connection.query.restore();
       });
 
       it('Retorna um array vazio', async () => {
-        const listProducts = await productsModel.getAll();
+        const response = await productsModel.getAll();
 
-        expect(listProducts).to.be.an('array');
-        expect(listProducts).to.be.empty;
+        expect(response).to.be.an('array');
+        expect(response).to.be.empty;
       });
     });
 
@@ -69,24 +69,24 @@ describe('Teste da camada Model Products', () => {
       }];
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([fakeArray]);
+        sinon.stub(connection, 'query').resolves([fakeArray]);
       });
 
       after(async () => {
-        connection.execute.restore();
+        connection.query.restore();
       });
 
       it('Retorna um array de objetos', async () => {
-        const listProducts = await productsModel.getAll();
+        const response = await productsModel.getAll();
 
-        expect(listProducts).to.be.an('array');
-        expect([listProducts]).to.be.an('object');
+        expect(response).to.be.an('array');
+        expect([response]).to.be.an('object');
       });
 
       it('O objetos dod produtos possui as propriedades "id", "name" e "quantity"', async () => {
-        const [itemProduct] = await productsModel.getAll();
+        const [response] = await productsModel.getAll();
 
-        expect(itemProduct).to.include.all.keys('id', 'name', 'quantity');
+        expect(response).to.include.all.keys('id', 'name', 'quantity');
       });
     });
   });
@@ -94,11 +94,11 @@ describe('Teste da camada Model Products', () => {
   describe('Busca um produto pelo seu "id" no BD', () => {
     describe('Quando o produto NÃO é encontrado', () => {
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([[]]);
+        sinon.stub(connection, 'query').resolves([[]]);
       });
 
       after(async () => {
-        connection.execute.restore();
+        connection.query.restore();
       });
 
       it('Retorna um array vazio', async () => {
@@ -118,11 +118,11 @@ describe('Teste da camada Model Products', () => {
       }
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([product]);
+        sinon.stub(connection, 'query').resolves([product]);
       });
 
       after(async () => {
-        connection.execute.restore();
+        connection.query.restore();
       });
 
       it('Retorna um array com UM objeto', async () => {
@@ -133,9 +133,9 @@ describe('Teste da camada Model Products', () => {
       });
 
       it('O objeto do produto possui as propriedades "id", "name" e "quantity"', async () => {
-        const [product] = await productsModel.getById(1);
+        const [response] = await productsModel.getById(1);
 
-        expect(product).to.include.all.keys('id', 'name', 'quantity');
+        expect(response).to.include.all.keys('id', 'name', 'quantity');
       });
 
       describe('Atualiza um produto no BD', () => {
@@ -147,25 +147,43 @@ describe('Teste da camada Model Products', () => {
           }
 
           before(async () => {
-            sinon.stub(connection, 'execute').resolves([{ changedRows: 1 }]);
+            sinon.stub(connection, 'query').resolves([{ changedRows: 1 }]);
           });
 
           after(async () => {
-            connection.execute.restore();
+            connection.query.restore();
           });
 
           it('Retorna um objeto com a propriedade "changedRows"', async () => {
-            const product = await productsModel.update(payloadProduct);
+            const response = await productsModel.update(payloadProduct);
 
-            expect(product.changedRows).to.be.equal(1);
+            expect(response.changedRows).to.be.equal(1);
 
             it('Retorna um objeto com novo valor atualizado', async () => {
-              const product = await productsModel.update(payloadProduct);
+              const response = await productsModel.update(payloadProduct);
 
-              expect(product).to.include.all.keys('id', 'name', 'quantity');
+              expect(response).to.include.all.keys('id', 'name', 'quantity');
             });
           });
         });
+      });
+    });
+  });
+
+  describe('Deleta um produto do BD pelo seu "id"', () => {
+    describe('Em caso de sucesso', () => {
+      before(async () => {
+        sinon.stub(connection, 'query').resolves([{ affectedRows: 1 }]);
+      });
+
+      after(async () => {
+        connection.query.restore();
+      });
+
+      it('Retorna objeto com a propriedade "affectRows"', async () => {
+        const response = await productsModel.remove(1);
+
+        expect(response.affectedRows).to.be.equal(1);
       });
     });
   });
