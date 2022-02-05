@@ -175,10 +175,63 @@ describe('TESTE DA CAMADA SERVICE', () => {
           connection.query.restore();
         });
 
-        it('Retorna um array', async () => {
+        it('Retorna um objeto', async () => {
           const response = await productsService.updateProductById(1);
 
-          expect(response).to.be.an('array');
+          expect(response).to.be.an('object');
+        });
+
+        it('O objeto possui as propriedades "id", "name" e "quantity" atualizados', async () => {
+          const response = await productsService.updateProductById(1);
+
+          expect(response).to.have.a.property('id');
+          expect(response).to.have.a.property('name');
+          expect(response).to.have.a.property('quantity');
+        });
+      });
+
+      describe('Quando o produto não existe no BD', () => {
+        before(async () => {
+          sinon.stub(connection, 'query').resolves([[{}]]);
+        });
+
+        after(async () => {
+          connection.query.restore();
+        });
+
+        it('Retorna um objeto vazio', async () => {
+          const response = await productsService.updateProductById(99);
+
+          expect(response).to.be.an('object'); // refatorar
+          // expect(response).to.be.empty;
+        });
+      });
+    });
+
+    describe('Testa a função que deleta um produto', () => {
+      describe('Quando o produto é deletado', () => {
+        const product = { id: 1, name: 'Batatonanana', quantity: 2 };
+
+        before(async () => {
+          sinon.stub(connection, 'query').resolves([[product]]);
+        });
+
+        after(async () => {
+          connection.query.restore();
+        });
+
+        it('Retorna um objeto', async () => {
+          const response = await productsService.removeProductById(1);
+
+          expect(response).to.be.an('object');
+        });
+
+        it('O objeto possui as propriedades "id", "name" e "quantity" atualizados', async () => {
+          const response = await productsService.removeProductById(1);
+
+          expect(response).to.have.a.property('id');
+          expect(response).to.have.a.property('name');
+          expect(response).to.have.a.property('quantity');
         });
       });
     });
