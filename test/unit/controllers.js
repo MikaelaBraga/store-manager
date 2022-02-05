@@ -34,6 +34,10 @@ describe('TESTE DA CAMADA DE CONTROLLER', () => {
     describe('Quando o payload é válido', () => {});
   });
 
-  describe('Teste do controller de listar produtos', () => {});
+  describe('Teste do controller de listar produtos', () => {
+    describe('Quando NÃO houver produtos', () => {});
+
+    describe('Quando houver produtos', () => {});
+  });
 
 });
