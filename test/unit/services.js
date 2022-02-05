@@ -164,5 +164,22 @@ describe('TESTE DA CAMADA SERVICE', () => {
       });
     });
 
-    describe('Teste da função que atualiza um produto', () => {});
+    describe('Teste da função que atualiza um produto', () => {
+      describe('Quando o produto é atualizado', () => {
+        const product = { id: 1, name: 'Batatona', quantity: 27 };
+        before(async () => {
+          sinon.stub(connection, 'query').resolves([[product]]);
+        });
+
+        after(async () => {
+          connection.query.restore();
+        });
+
+        it('Retorna um array', async () => {
+          const response = await productsService.updateProductById(1);
+
+          expect(response).to.be.an('array');
+        });
+      });
+    });
 });
