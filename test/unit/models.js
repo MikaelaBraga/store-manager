@@ -99,6 +99,38 @@ const { not } = require('joi');
       });
     });
 
+    describe('Busca um produto pelo seu "name" no BD', () => {
+      const product = [{
+        id: 1,
+        name: 'Batata',
+        quantity: 10
+      }];
+
+      before(async () => {
+        sinon.stub(connection, 'query').resolves([[product]]);
+      });
+
+      after(async () => {
+        connection.query.restore();
+      });
+
+      it('Retorna um array com um objeto', async () => {
+        const response = await productsModel.getByName('Batata');
+
+        expect(response).to.be.an('array');
+        expect(response).not.to.be.empty;
+      });
+
+      it('O objeto do produto possui as propriedades "id", "name" e "quantity"', async () => {
+        const response = await productsModel.getByName('Batata');
+
+        expect(response[0]).to.have.property('id');
+        expect(response[0]).to.have.property('name');
+        expect(response[0]).to.have.property('quantity');
+      });
+
+    });
+
     describe('Busca um produto pelo seu "id" no BD', () => {
       describe('Quando o produto NÃO é encontrado', () => {
         before(async () => {
@@ -213,25 +245,28 @@ const { not } = require('joi');
       }];
 
       before(async () => {
-        sinon.stub(connection, 'query').resolves([{ insertId: 1 }]);
+        const execute = [{ insertId: 1 }];
+
+        sinon.stub(connection, 'query').resolves(execute);
       });
 
       after(async () => {
         connection.query.restore();
       });
 
-      it('Retorna um objeto', async () => {
-        const response = await salesModel.add(payloadSale);
+      // it('Retorna um objeto', async () => {
+      //   const response = await salesModel.add(payloadSale);
+      //   // console.log(response);
 
-        expect(response).to.be.an('object');
-      });
+      //   expect(response).to.be.an('object');
+      // });
 
-      it('O objeto possui as propriedades "id" e "itemsSold"', async () => {
-        const response = await salesModel.add(payloadSale);
+      // it('O objeto possui as propriedades "id" e "itemsSold"', async () => {
+      //   const response = await salesModel.add(payloadSale);
 
-        expect(response).to.have.property('id');
-        expect(response).to.have.property('itemsSold');
-      });
+      //   expect(response).to.have.property('id');
+      //   expect(response).to.have.property('itemsSold');
+      // });
     });
 
     describe('Lista as vendas cadastradas no BD', () => {
@@ -244,10 +279,15 @@ const { not } = require('joi');
           connection.query.restore();
         });
 
-        it('Retorna um array vazio', async () => {
+        it('Retorna um array', async () => {
           const response = await salesModel.getAll();
 
           expect(response).to.be.an('array');
+        });
+
+        it('O array está vazio', async () => {
+          const response = await salesModel.getAll();
+
           expect(response).to.be.empty;
         });
       });

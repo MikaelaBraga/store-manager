@@ -2,8 +2,8 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 
 const connection = require('../../models/connection');
-const productModel = require('../../models/productModel');
 const productsService = require('../../services/productService');
+const salesService = require('../../services/salesService');
 
 describe('TESTE DA CAMADA SERVICE', () => {
 
@@ -233,6 +233,44 @@ describe('TESTE DA CAMADA SERVICE', () => {
           expect(response).to.have.a.property('name');
           expect(response).to.have.a.property('quantity');
         });
+      });
+    });
+
+    describe('Teste da função que lista as vendas', () => {
+
+      describe('Quando há vendas cadastradas', () => {
+
+        before(async () => {
+          const execute = {
+            id: 1,
+            itemsSold: [
+              {
+                product_id: 1,
+                quantity: 2
+              }
+            ]
+          };
+
+          sinon.stub(connection, 'query').resolves([[execute]]);
+        });
+
+        after(async () => {
+          connection.query.restore();
+        });
+
+        it('Retorna um array', async () => {
+          const response = await salesService.getAllSales();
+
+          expect(response).to.be.an('array');
+        });
+
+        it('O objeto possui a propriedade "id" e "itemsSold"', async () => {
+          const [response] = await salesService.getAllSales();
+
+          expect(response).to.have.a.property('id');
+          expect(response).to.have.a.property('itemsSold');
+        });
+
       });
     });
 });
