@@ -2,7 +2,8 @@ const rescue = require('express-rescue');
 const sales = require('express').Router();
 const {
   validatedFieldProductId,
-  validateFieldQuantity } = require('../middlewares/validatedSaleMiddleware');
+  validateFieldQuantity,
+  validateQuantityProduct } = require('../middlewares/validatedSaleMiddleware');
 const {
   registerSale, getAllSales, getSaleById, updateSale, removeSale,
 } = require('../services/salesService');
@@ -10,6 +11,7 @@ const {
 sales.post('/',
 validatedFieldProductId,
 validateFieldQuantity,
+validateQuantityProduct,
 rescue(async (req, res) => {
   const sale = await registerSale(req.body);
 
